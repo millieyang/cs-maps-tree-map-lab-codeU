@@ -111,14 +111,14 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 	}
 	
 	private boolean valueHelper(Node currentNode, Object target) {
-		if (root == null) {
+		if (currentNode == null) {
 			return false;
 		}
-		if (equals(root.value,target)) {
+		if (equals(currentNode.value,target)) {
 			return true;
 		}
 		
-		return valueHelper(root.left,target) || valueHelper(root.right, target);	
+		return valueHelper(currentNode.left,target) || valueHelper(currentNode.right, target);	
 	}
 
 	@Override
