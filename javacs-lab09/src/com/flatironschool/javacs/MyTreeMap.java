@@ -150,11 +150,11 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 	}
 
 	private void keySetRunner(Node root, Set<K> set) {
-		while (root!= null) {
-			keySetRunner(root.left,set);
-			set.add(root.key);
-			keySetRunner(root.right,set);
-		}
+		if(root==null)return;
+		keySetRunner(root.left,set);
+		set.add(root.key);
+		keySetRunner(root.right,set);
+		
 	}
 	
 	@Override
@@ -177,8 +177,8 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 			int comparison = k.compareTo(node.key);
 			if (comparison > 0) {
 				if (node.right == null) {
-					size++;
 					node.right = new Node(key, value);
+					size++;
 					return null;
 				}
 				else {
@@ -187,8 +187,8 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 			}
 			else if (comparison < 0) {
 				if (node.left == null) {
-					size--;
 					node.left = new Node(key, value);
+					size++;
 					return null;
 				}
 				else {
