@@ -70,6 +70,19 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 		// something to make the compiler happy
 		@SuppressWarnings("unchecked")
 		Comparable<? super K> k = (Comparable<? super K>) target;
+		Node node = root;
+		while (node!=null){
+			int comparison = k.compareTo(node.key);
+			if (comparison > 0) {
+				node = node.right;
+			}
+			else if (comparison < 0) {
+				node = node.left;
+			}
+			else {
+				return node;
+			}
+		}
 		
 		// the actual search
         // TODO: Fill this in.
@@ -92,7 +105,20 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 
 	@Override
 	public boolean containsValue(Object target) {
-		return false;
+
+		return valueHelper(root,target);
+		
+	}
+	
+	private boolean valueHelper(Node currentNode, Object target) {
+		if (root == null) {
+			return false;
+		}
+		if (equals(root.value,target)) {
+			return true;
+		}
+		
+		return valueHelper(root.left,target) || valueHelper(root.right, target);	
 	}
 
 	@Override
@@ -117,10 +143,20 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 	@Override
 	public Set<K> keySet() {
 		Set<K> set = new LinkedHashSet<K>();
+		keySetRunner(root,set);
+		
         // TODO: Fill this in.
 		return set;
 	}
 
+	private void keySetRunner(Node root, Set<K> set) {
+		while (root!= null) {
+			keySetRunner(root.left,set);
+			set.add(root.key);
+			keySetRunner(root.right,set);
+		}
+	}
+	
 	@Override
 	public V put(K key, V value) {
 		if (key == null) {
@@ -135,9 +171,39 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 	}
 
 	private V putHelper(Node node, K key, V value) {
-        // TODO: Fill this in.
-        return null;
+		@SuppressWarnings("unchecked")
+		Comparable<? super K> k = (Comparable<? super K>) key;
+		Node currentNode = root;
+			int comparison = k.compareTo(node.key);
+			if (comparison > 0) {
+				if (node.right == null) {
+					size++;
+					node.right = new Node(key, value);
+					return null;
+				}
+				else {
+					return putHelper(node.right,key,value);
+				}
+			}
+			else if (comparison < 0) {
+				if (node.left == null) {
+					size--;
+					node.left = new Node(key, value);
+					return null;
+				}
+				else {
+					return putHelper(node.left,key,value);
+				}
+			}
+			else {
+				V answer = node.value;
+				node.value = value;
+				return answer;
+			}
 	}
+	
+	
+	
 
 	@Override
 	public void putAll(Map<? extends K, ? extends V> map) {
